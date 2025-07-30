@@ -2,14 +2,94 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>John Stanley Portfolio</title>
+    <meta charset="UTF‑8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Name | Portfolio</title>
+    <link rel="stylesheet" href="CSS/style.css">
 </head>
 
 <body>
-    <p>This is just a test to see if I can see it in github</p>
-    <p>signed out of diff git account trying again</p>
+    <section id="hero">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1>John Stanley</h1>
+                <h2>Digital Media & Web Design</h2>
+                <p>Veteran • Developer • Creator</p>
+                <nav class="hero-buttons">
+                    <a href="#about">About</a>
+                    <a href="#work">Portfolio</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>
+            Hi, I'm <strong>John Stanley</strong> – a U.S. Air Force veteran with a strong background in aerospace
+            maintenance and a growing passion for digital technology. I spent <strong>8 years and 8 months</strong>
+            serving
+            as a <strong>Jet Engine Technician</strong>, where I developed a meticulous eye for detail, problem-solving
+            skills, and a commitment to excellence.
+        </p>
+        <p>
+            After my military career, I transitioned into the tech world through a <strong>3-year internship with Pratt
+                &
+                Whitney Canada</strong>. During this time, I worked on:
+        </p>
+        <ul>
+            <li>Web development projects improving internal tools and workflows</li>
+            <li>Custom applications built with <strong>C# and Unity</strong></li>
+            <li>Lotus Notes database redevelopment</li>
+            <li>Modern SharePoint and WebCon form solutions</li>
+            <li>Supporting teams as a SharePoint Admin and Designer</li>
+        </ul>
+        <p>
+            Currently, I’m a <strong>F135 Technician at Pratt & Whitney</strong>, continuing my hands-on work in the
+            aerospace field while expanding my expertise in technology and development.
+        </p>
+        <p>
+            In just a few weeks, I’ll be graduating with a <strong>Bachelor's degree in Digital Media and Web
+                Design</strong>, combining my technical background with creative problem-solving skills to build
+            meaningful,
+            user-focused digital experiences.
+        </p>
+    </section>
+
+
+    <section id="work">
+        <h2>Projects</h2>
+        <div class="projects">
+            <a href="https://cmst386-jstanley25.azurewebsites.net/project1/project1.html">Search Engine Optimization
+                Basics</a>
+            <a href="https://cmst386-jstanley25.azurewebsites.net/project3/project3.html">Responsive Design &
+                Analytics</a>
+            <a href="https://cmst386-jstanley25.azurewebsites.net/project4/index.html#gsc.tab=0">Mountain Momma's
+                Bakery</a>
+            <a href="https://www.spatial.io/s/Kothos-68895826f734432bbfb0b3f2">Spatial.io World</a>
+            <!-- Add more -->
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <form id="contactForm" onsubmit="sendEmail(event)">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button type="submit">Send Email</button>
+        </form>
+    </section>
+
+
+    <script src="JS/script.js"></script>
 </body>
 
 </html>
