@@ -24,3 +24,18 @@ function sendEmail(event) {
   // Open email client
   window.location.href = mailtoLink;
 }
+
+// JS for popup gallery
+const triggers = document.querySelectorAll('.popup-trigger');
+const popup = document.getElementById('popup-gallery');
+const galleryImages = document.querySelector('.gallery-images');
+const closeBtn = document.querySelector('.close-btn');
+
+triggers.forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const imgs = trigger.dataset.images.split(',');
+    galleryImages.innerHTML = imgs.map(src => `<img src="${src}" alt="Gallery Image">`).join('');
+    popup.style.display = 'flex';
+  });
+});
+closeBtn.addEventListener('click', () => popup.style.display = 'none');
