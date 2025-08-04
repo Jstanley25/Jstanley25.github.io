@@ -26,16 +26,49 @@ function sendEmail(event) {
 }
 
 // JS for popup gallery
-const triggers = document.querySelectorAll('.popup-trigger');
-const popup = document.getElementById('popup-gallery');
-const galleryImages = document.querySelector('.gallery-images');
-const closeBtn = document.querySelector('.close-btn');
+document.addEventListener("DOMContentLoaded", () => {
+  const triggers = document.querySelectorAll('.popup-trigger');
+  const popup = document.getElementById('popup-gallery');
+  const galleryMedia = document.querySelector('.gallery-images');
+  const closeBtn = document.querySelector('.close-btn');
+  let currentIndex = 0;
+  let mediaArray = [];
 
-triggers.forEach(trigger => {
-  trigger.addEventListener('click', () => {
-    const imgs = trigger.dataset.images.split(',');
-    galleryImages.innerHTML = imgs.map(src => `<img src="${src}" alt="Gallery Image">`).join('');
-    popup.style.display = 'flex';
+  // Open gallery
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      mediaArray = trigger.dataset.media.split(',');
+      currentIndex = 0;
+      showMedia();
+      popup.style.display = 'flex';
+    });
   });
+
+  // Show next media on click
+  popup.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % mediaArray.length;
+    showMedia();
+  });
+
+  // Close button
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    popup.style.display = 'none';
+  });
+
+  function showMedia() {
+    const src = mediaArray[currentIndex].trim();
+    const isVideo = src.endsWith('.mp4') || src.endsWith('.webm') || src.endsWith('.ogg');
+
+    if (isVideo) {
+      galleryMedia.innerHTML = `
+        <video controls autoplay style="max-width:90%;max-height:90%;">
+          <source src="${src}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>`;
+    } else {
+      galleryMedia.innerHTML = `<img src="${src}" alt="Gallery Media" style="max-width:90%;max-height:90%;">`;
+    }
+  }
 });
-closeBtn.addEventListener('click', () => popup.style.display = 'none');
+

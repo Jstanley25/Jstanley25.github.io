@@ -273,3 +273,19 @@ form button:hover {
   color: #fff;
   cursor: pointer;
 }
+
+.project-card img,
+.project-card video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
