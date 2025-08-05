@@ -17,7 +17,7 @@
                 <p>Veteran • Developer • Creator</p>
                 <nav class="hero-buttons">
                     <a href="#about">About</a>
-                    <a href="#work">Portfolio</a>
+                    <a href="#projects">Projects</a>
                     <a href="#contact">Contact</a>
                 </nav>
             </div>
@@ -179,6 +179,59 @@
                     data-media="Images/Morgan_Wallen.png,Images/Morgan_Wallen_2.png,Images/Morgan_Wallen_3.png,Images/Morgan_Wallen_4.png">View
                     Project</a>
             </div>
+
+            <!-- Project 7 -->
+            <div class="project-card">
+                <video controls poster="images/project7-thumbnail.jpg">
+                    <source src="Video/Prototype.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <h3>Band Wireframe - Citadel Kings</h3>
+                <p>This project is a basic wireframe concept for a fictional band, the Citadel Kings. The homepage
+                    displays a list
+                    of upcoming concerts, with a “Buy Tickets” button that opens a side panel for ticket purchases. The
+                    second page
+                    provides band details on an about section, while the final store page allows users to browse
+                    merchandise. A cart
+                    button opens a side panel where users can add or remove items, view totals, and proceed to checkout.
+                    This
+                    project demonstrates wireframing, UI/UX design planning, and interactive element prototyping for an
+                    online band
+                    experience.</p>
+                <a href="javascript:void(0);" class="btn popup-trigger" data-media="Video/Prototype.mp4">View
+                    Project</a>
+            </div>
+            <!-- Game Project 8: Pong -->
+            <div class="project-card">
+                <img src="Images/pong.png" alt="Pong Game Thumbnail" class="popup-trigger-game" data-game="pong">
+                <h3>Pong (Single Player)</h3>
+                <p>A classic arcade game where you face off against the computer. Control your paddle using the Up and
+                    Down arrow keys to hit the ball past your opponent. The game gets faster over time, testing your
+                    reflexes and precision. Score points and try to beat the AI in this retro challenge.</p>
+                <button class="btn open-game" data-game="pong">Play Game</button>
+            </div>
+
+            <!-- Game Project 9: Snake -->
+            <div class="project-card">
+                <img src="Images/snake.png" alt="Snake Game Thumbnail" class="popup-trigger-game" data-game="snake">
+                <h3>Snake</h3>
+                <p>Guide your snake to eat food and grow longer using the arrow keys. Avoid colliding with yourself or
+                    the walls as the snake gets faster and more challenging. This project recreates the classic Snake
+                    game
+                    with smooth controls and score tracking.</p>
+                <button class="btn open-game" data-game="snake">Play Game</button>
+            </div>
+
+            <!-- Game Project 10: Breakout -->
+            <div class="project-card">
+                <img src="Images/breakout.png" alt="Breakout Game Thumbnail" class="popup-trigger-game"
+                    data-game="breakout">
+                <h3>Breakout</h3>
+                <p>Break all the bricks using your paddle and bouncing ball. Use the Left and Right arrow keys to move,
+                    avoid missing the ball, and rack up points while clearing every block. Includes multiple lives and
+                    score tracking for replayability.</p>
+                <button class="btn open-game" data-game="breakout">Play Game</button>
+            </div>
         </div>
     </section>
 
@@ -191,11 +244,8 @@
     <section id="resume">
         <h2>My Resume</h2>
         <div class="resume-container">
-            <!-- Embedded Preview -->
             <iframe src="Documents/Stanley_Resume.pdf#toolbar=0" width="100%" height="600px"
                 title="John Stanley Resume"></iframe>
-
-            <!-- Download Button -->
             <a href="Documents/Stanley_Resume.pdf" class="btn" download>Download My Resume</a>
         </div>
     </section>
@@ -217,8 +267,21 @@
         </form>
     </section>
 
+    <!-- =========================
+             Game Popup
+        ========================= -->
+    <div id="popup-game" class="popup" style="display:none;">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <div id="gameControls"></div>
+            <canvas id="gameCanvas" width="600" height="400"></canvas>
+
+        </div>
+    </div>
 
     <script src="JS/script.js"></script>
+    <script src="JS/loader.js"></script>
+
 </body>
 
 </html>
