@@ -4,46 +4,46 @@ class PongGame {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-
-        // Game settings
         this.paddleHeight = 60;
         this.paddleWidth = 10;
-        this.initialBallSpeed = 4;
-        this.maxBallSpeed = 10;
-        this.color = "white";
-
         this.running = false;
         this.interval = null;
         this.keyHandler = this.handleKeys.bind(this);
+        this.touchStartY = null;
 
-        this.playerScore = 0;
-        this.computerScore = 0;
+        this.handleTouchStart = this.handleTouchStart.bind(this);
+        this.handleTouchMove = this.handleTouchMove.bind(this);
 
         this.resetGame();
         console.log("🎮 PongGame initialized");
     }
 
-    resetGame(direction = 1) {
+    resetGame() {
         this.playerY = (this.canvas.height - this.paddleHeight) / 2;
         this.computerY = this.playerY;
-
         this.ball = { 
             x: this.canvas.width / 2, 
             y: this.canvas.height / 2, 
-            dx: this.initialBallSpeed * direction, 
-            dy: this.initialBallSpeed * (Math.random() > 0.5 ? 1 : -1), 
-            size: 8,
-            speed: this.initialBallSpeed
+            dx: 4, 
+            dy: 4, 
+            size: 8 
         };
+        console.log("🔄 Game reset:", this.ball);
     }
 
     start() {
-        this.stop();
+        console.log("✅ PongGame.start() called");
+        this.stop(); 
         this.resetGame();
         this.running = true;
 
         document.addEventListener('keydown', this.keyHandler);
-        this.interval = setInterval(() => this.update(), 1000 / 60);
+        this.canvas.addEventListener('touchstart', this.handleTouchStart);
+        this.canvas.addEventListener('touchmove', this.handleTouchMove);
+
+        this.interval = setInterval(() => {
+            this.update();
+        }, 1000 / 60);
     }
 
     handleKeys(e) {
@@ -54,14 +54,28 @@ class PongGame {
         }
     }
 
+    // ✅ Mobile touch controls
+    handleTouchStart(e) {
+        this.touchStartY = e.touches[0].clientY;
+    }
+
+    handleTouchMove(e) {
+        let touchY = e.touches[0].clientY;
+        let move = touchY - this.touchStartY;
+        this.playerY = Math.min(
+            this.canvas.height - this.paddleHeight,
+            Math.max(0, this.playerY + move * 0.3)
+        );
+        this.touchStartY = touchY;
+    }
+
     update() {
         if (!this.running) return;
 
-        // Move ball
         this.ball.x += this.ball.dx;
         this.ball.y += this.ball.dy;
 
-        // Bounce top/bottom
+        // Bounce off top/bottom
         if (this.ball.y <= 0 || this.ball.y + this.ball.size >= this.canvas.height) {
             this.ball.dy *= -1;
         }
@@ -71,7 +85,6 @@ class PongGame {
             this.ball.y + this.ball.size >= this.playerY &&
             this.ball.y <= this.playerY + this.paddleHeight) {
             this.ball.dx = Math.abs(this.ball.dx);
-            this.increaseBallSpeed();
         }
 
         // Computer paddle collision
@@ -79,66 +92,45 @@ class PongGame {
             this.ball.y + this.ball.size >= this.computerY &&
             this.ball.y <= this.computerY + this.paddleHeight) {
             this.ball.dx = -Math.abs(this.ball.dx);
-            this.increaseBallSpeed();
         }
 
-        // Computer AI
-        const targetY = this.ball.y - (this.paddleHeight / 2);
-        this.computerY += (targetY - this.computerY) * 0.1;
-        this.computerY = Math.max(0, Math.min(this.canvas.height - this.paddleHeight, this.computerY));
+        // Simple AI
+        this.computerY += (this.ball.y - (this.computerY + this.paddleHeight / 2)) * 0.1;
 
-        // Check scoring
-        if (this.ball.x < 0) {
-            this.computerScore++;
-            this.resetGame(1); // ball goes toward player
-        } 
-        else if (this.ball.x > this.canvas.width) {
-            this.playerScore++;
-            this.resetGame(-1); // ball goes toward computer
+        // Out of bounds → reset
+        if (this.ball.x < 0 || this.ball.x > this.canvas.width) {
+            this.resetGame();
+            this.ball.dx = this.ball.dx > 0 ? 4 : -4;
         }
 
         this.draw();
     }
 
-    increaseBallSpeed() {
-        // Increase speed slightly each hit, up to maxBallSpeed
-        let speedFactor = 1.05;
-        this.ball.dx *= speedFactor;
-        this.ball.dy *= speedFactor;
-
-        // Limit max speed
-        this.ball.dx = Math.max(Math.min(this.ball.dx, this.maxBallSpeed), -this.maxBallSpeed);
-        this.ball.dy = Math.max(Math.min(this.ball.dy, this.maxBallSpeed), -this.maxBallSpeed);
-    }
-
     draw() {
-        // Clear screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = this.color;
 
-        // Draw player paddle
+        // Player paddle
+        this.ctx.fillStyle = "white";
         this.ctx.fillRect(0, this.playerY, this.paddleWidth, this.paddleHeight);
 
-        // Draw computer paddle
+        // Computer paddle
         this.ctx.fillRect(this.canvas.width - this.paddleWidth, this.computerY, this.paddleWidth, this.paddleHeight);
 
-        // Draw ball
+        // Ball
         this.ctx.beginPath();
         this.ctx.arc(this.ball.x, this.ball.y, this.ball.size, 0, Math.PI * 2);
         this.ctx.fill();
-
-        // Draw score
-        this.ctx.font = "30px Arial";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText(`${this.playerScore}   |   ${this.computerScore}`, this.canvas.width / 2, 40);
     }
 
     stop() {
+        console.log("🛑 Stopping Pong game");
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
         }
         document.removeEventListener('keydown', this.keyHandler);
+        this.canvas.removeEventListener('touchstart', this.handleTouchStart);
+        this.canvas.removeEventListener('touchmove', this.handleTouchMove);
         this.running = false;
     }
 }
