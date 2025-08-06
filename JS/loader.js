@@ -35,8 +35,9 @@ function loadGame(game) {
     }
 
     // ✅ Reset canvas size before loading a new game
-    canvas.width = 600;
-    canvas.height = 400;
+    canvas.width = document.querySelector('.popup-content').offsetWidth;
+    canvas.height = document.querySelector('.popup-content').offsetHeight;
+
 
     // ✅ Load the game script only once, then restart it
     if (loadedScripts[game]) {

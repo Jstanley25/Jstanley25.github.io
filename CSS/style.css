@@ -348,7 +348,14 @@ form textarea:focus {
   padding: 10px;
   border-radius: 6px;
   text-align: center;
+  width: 90vw;      /* NEW - make popup 80% of screen width */
+  height: 90vh;     /* NEW - make popup 80% of screen height */
+  display: flex;    /* NEW - let the game container stretch */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
 
 body.popup-open {
   overflow: hidden;
@@ -361,8 +368,8 @@ body.popup-open {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
 }
 
 #gameCanvas {
@@ -370,9 +377,9 @@ body.popup-open {
   border: 3px solid #fff;
   width: 100%;
   height: 100%;
-  max-width: 1000px;
-  max-height: 600px;
+  object-fit: contain; /* keeps proportions */
 }
+
 
 .controls-overlay {
   position: absolute;
