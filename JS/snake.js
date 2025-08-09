@@ -10,6 +10,9 @@ class SnakeGame {
         this.direction = "RIGHT";
         this.nextDirection = "RIGHT";
         this.score = 0;
+        this.playWidth = this.canvas.width;
+        this.playHeight = this.canvas.height;
+
 
         // Touch tracking
         this.touchStartX = 0;
@@ -24,6 +27,12 @@ class SnakeGame {
 
         console.log("🎮 SnakeGame initialized");
     }
+
+    setupPlayfield() {
+  // Snap the canvas pixel size down to full grid cells
+  this.playWidth  = Math.floor(this.canvas.width  / this.gridSize) * this.gridSize;
+  this.playHeight = Math.floor(this.canvas.height / this.gridSize) * this.gridSize;
+}
 
     createRestartButton() {
         const popupContainer = document.getElementById("popup-game");
@@ -62,14 +71,22 @@ class SnakeGame {
     }
 
     getRandomFood() {
-        return {
-            x: Math.floor(Math.random() * (this.canvas.width / this.gridSize)) * this.gridSize,
-            y: Math.floor(Math.random() * (this.canvas.height / this.gridSize)) * this.gridSize
-        };
-    }
+  const maxX = this.playWidth  - this.gridSize;
+  const maxY = this.playHeight - this.gridSize;
+
+  let fx, fy;
+  do {
+    fx = Math.floor(Math.random() * ((maxX + 1) / this.gridSize)) * this.gridSize;
+    fy = Math.floor(Math.random() * ((maxY + 1) / this.gridSize)) * this.gridSize;
+  } while (this.snake.some(seg => seg.x === fx && seg.y === fy));
+
+  return { x: fx, y: fy };
+}
+
 
     start() {
         this.stop();
+        this.setupPlayfield();
         this.resetGame();
         this.running = true;
         this.restartBtn.style.display = "none";
@@ -115,30 +132,38 @@ class SnakeGame {
     update() {
         if (!this.running) return;
 
-        // ✅ Apply next direction ONCE per tick
+        // apply buffered direction once per tick
         this.direction = this.nextDirection;
 
+        // compute next head
         const head = { ...this.snake[0] };
-        if (this.direction === "UP") head.y -= this.gridSize;
-        if (this.direction === "DOWN") head.y += this.gridSize;
-        if (this.direction === "LEFT") head.x -= this.gridSize;
+        if (this.direction === "UP")    head.y -= this.gridSize;
+        if (this.direction === "DOWN")  head.y += this.gridSize;
+        if (this.direction === "LEFT")  head.x -= this.gridSize;
         if (this.direction === "RIGHT") head.x += this.gridSize;
 
-        // Check wall or self collision
-        if (
-            head.x < 0 || head.y < 0 ||
-            head.x >= this.canvas.width ||
-            head.y >= this.canvas.height ||
-            this.snake.some(s => s.x === head.x && s.y === head.y)
-        ) {
+        // bounds based on snapped playfield, not raw canvas
+        const maxX = this.playWidth  - this.gridSize;
+        const maxY = this.playHeight - this.gridSize;
+
+        // wall collision
+        if (head.x < 0 || head.y < 0 || head.x > maxX || head.y > maxY) {
             this.running = false;
             this.restartBtn.style.display = "block";
             return;
         }
 
+        // self-collision (check AGAINST CURRENT BODY before adding head)
+        if (this.snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+            this.running = false;
+            this.restartBtn.style.display = "block";
+            return;
+        }
+
+        // move: add head
         this.snake.unshift(head);
 
-        // Eat food
+        // eat or advance tail
         if (head.x === this.food.x && head.y === this.food.y) {
             this.food = this.getRandomFood();
             this.score++;
@@ -148,6 +173,7 @@ class SnakeGame {
 
         this.draw();
     }
+
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

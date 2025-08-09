@@ -375,10 +375,14 @@ body.popup-open {
 #gameCanvas {
   background: #000;
   border: 3px solid #fff;
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* keeps proportions */
+  /* Remove these two if present; JS will set exact px size */
+  /* width: 100%; */
+  /* height: 100%; */
+  max-width: 100vw;   /* safety clamps only */
+  max-height: 100vh;
+  display: block;
 }
+
 
 
 .controls-overlay {

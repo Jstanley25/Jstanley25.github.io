@@ -24,34 +24,50 @@ function closePopup() {
 }
 
 function loadGame(game) {
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
 
-    // ✅ Stop and destroy the old game if active
-    if (currentGame && typeof currentGame.stop === 'function') {
-        currentGame.stop();
-        currentGame = null;
-    }
+  // Stop any running game
+  if (currentGame && typeof currentGame.stop === 'function') {
+    currentGame.stop();
+    currentGame = null;
+  }
 
-    // ✅ Reset canvas size before loading a new game
-    canvas.width = document.querySelector('.popup-content').offsetWidth;
-    canvas.height = document.querySelector('.popup-content').offsetHeight;
+  // --- Size the canvas (no DPR scaling) ---
+  // Use 90% of the viewport
+  let w = Math.floor(window.innerWidth  * 0.9);
+  let h = Math.floor(window.innerHeight * 0.9);
 
+  // Snap to grid for Snake to prevent half-cells
+  if (game === 'snake') {
+    const GRID = 20;
+    w = Math.floor(w / GRID) * GRID;
+    h = Math.floor(h / GRID) * GRID;
+  }
 
-    // ✅ Load the game script only once, then restart it
-    if (loadedScripts[game]) {
-        startGame(game, canvas);
-    } else {
-        const script = document.createElement('script');
-        script.src = `JS/${game}.js?cacheBust=${Date.now()}`;
-        script.onload = () => {
-            loadedScripts[game] = true;
-            startGame(game, canvas);
-        };
-        document.body.appendChild(script);
-    }
+  // Set both the intrinsic pixel size and the CSS size to match
+  canvas.width  = w;
+  canvas.height = h;
+  canvas.style.width  = w + 'px';
+  canvas.style.height = h + 'px';
+
+  // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Load or start game
+  if (loadedScripts[game]) {
+    startGame(game, canvas);
+  } else {
+    const script = document.createElement('script');
+    script.src = `JS/${game}.js?cacheBust=${Date.now()}`;
+    script.onload = () => {
+      loadedScripts[game] = true;
+      startGame(game, canvas);
+    };
+    document.body.appendChild(script);
+  }
 }
+
 
 function startGame(game, canvas) {
     // ✅ Always create a fresh instance (forces reset)
